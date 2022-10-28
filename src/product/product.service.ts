@@ -3,9 +3,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
-import { Request } from 'express';
-import { domainToASCII } from 'url';
-import { product } from '@prisma/client';
+
 
 @Injectable()
 export class ProductService {

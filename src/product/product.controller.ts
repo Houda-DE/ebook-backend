@@ -22,7 +22,7 @@ export class ProductController {
     }
 
     @Get(':id')
-    findOneProduct(@Param('id', new ParseIntPipe()) id: number){
+    findOneProduct(@Param('id', ParseIntPipe) id: number){
         console.log(id)
         console.log('ani hna')
         return this.productService.findOneProduct(id)

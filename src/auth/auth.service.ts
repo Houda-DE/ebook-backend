@@ -20,7 +20,9 @@ export class AuthService {
                     lastName : dto.lastName
                 }
             })
+            return user
         }
+        
         catch(error){
             if (error instanceof PrismaClientKnownRequestError){
                 //P2002 sends to duplicate users

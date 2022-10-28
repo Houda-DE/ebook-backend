@@ -10,25 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user{
+model user {
 
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email String @unique
-  hash String
   firstName String
   lastName String
+  email String @unique
+  createdAt DateTime @default(now())
+  hash String
 
 }
 
 model product{
 
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  imageUrl String @unique
   name String @unique
   description String
-  prix Int
+  prix Int 
   quantity Int
+  imageUrl String @unique
+  createdAt DateTime @default(now())
+
+  categories category[]
+
+}
+
+model category{
+
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name String @unique
+
+  products product[]
 
 }
