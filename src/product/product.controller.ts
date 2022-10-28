@@ -4,6 +4,8 @@ import { ProductDto } from './dto';
 import { ProductService } from './product.service';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { HttpStatus } from '@nestjs/common/enums';
+import { CategorieDto } from 'src/categorie/dto';
+import { category } from '@prisma/client';
 
 @Controller('product')
 export class ProductController {
@@ -11,9 +13,9 @@ export class ProductController {
     constructor (private productService : ProductService) {}
 
     @Post('add')
-    addProduct (@Body() dto : ProductDto) {
+    addProduct (@Body() dto : ProductDto , id : number) {
         console.log(dto)
-        return this.productService.addProduct(dto)
+        return this.productService.addProduct(dto , id)
     }
 
     @Get('products')

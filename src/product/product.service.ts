@@ -3,6 +3,9 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
+import { CategorieService } from 'src/categorie/categorie.service';
+import { CategorieDto } from 'src/categorie/dto';
+import { category } from '@prisma/client';
 
 
 @Injectable()
@@ -10,7 +13,7 @@ export class ProductService {
 
     constructor (private prisma : PrismaService){}
 
-    async addProduct (dto : ProductDto) { 
+    async addProduct (dto : ProductDto , cat : category) { 
         try {
             const product = await this.prisma.product.create({
                 data : {
@@ -19,6 +22,11 @@ export class ProductService {
                     quantity : dto.quantity,
                     imageUrl : dto.imageUrl,
                     prix : dto.price,
+                    categories : {
+                        connect : {
+                            id : cat.id             
+                        }
+                    }
                 }
             })
         }
@@ -60,7 +68,7 @@ export class ProductService {
                 description : dto.description,
                 quantity : dto.quantity,
                 imageUrl : dto.imageUrl,
-                prix : dto.price,
+                prix : dto.price
             }
         })
     }
