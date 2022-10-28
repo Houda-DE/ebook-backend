@@ -4,6 +4,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { Request } from 'express';
+import { domainToASCII } from 'url';
+import { product } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -37,20 +39,12 @@ export class ProductService {
         return await this.prisma.product.findMany()
     }
 
-    async findOneProduct(dto : ProductDto){
+    async findOneProduct(id: number){
        try {
             return await this.prisma.product.findUniqueOrThrow({
                 where : {
-                    name : dto.name
+                    id  : id
                 },
-                select : {
-                    name : true,
-                    id : true,
-                    description : true,
-                    imageUrl : true,
-                    prix : true,
-                    quantity : true,
-                }
             })
        }
        catch(error){
@@ -58,18 +52,29 @@ export class ProductService {
        }
     }
 
-    async modifyProduct(dto : ProductDto , req : Request){
-        try{
-            return this.prisma.product
-        }
-        catch (error) {
-            throw error
-        }
+    async modifyProduct(id : number , dto : ProductDto){
+        return await this.prisma.product.update({
+            where :  {
+                id : id
+            },
+            data : {
+                name : dto.name,
+                description : dto.description,
+                quantity : dto.quantity,
+                imageUrl : dto.imageUrl,
+                prix : dto.price,
+            }
+        })
     }
 
-    async deleteProduct(dto : ProductDto){
+    async deleteProduct(id : number){
         try{
-
+            await this.prisma.product.delete({
+                where : {
+                    id : id
+                }
+            })
+            return this.findAllProducts()
         }
         catch (error) {
             throw error
