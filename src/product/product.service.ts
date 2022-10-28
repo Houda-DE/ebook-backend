@@ -3,8 +3,6 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
-import { CategorieService } from 'src/categorie/categorie.service';
-import { CategorieDto } from 'src/categorie/dto';
 import { category } from '@prisma/client';
 
 
@@ -58,7 +56,7 @@ export class ProductService {
        }
     }
 
-    async modifyProduct(id : number , dto : ProductDto){
+    async modifyProduct(id : number , dto : ProductDto , cat : category){
         return await this.prisma.product.update({
             where :  {
                 id : id
@@ -68,7 +66,12 @@ export class ProductService {
                 description : dto.description,
                 quantity : dto.quantity,
                 imageUrl : dto.imageUrl,
-                prix : dto.price
+                prix : dto.price,
+                categories : {
+                    connect : {
+                        id : cat.id             
+                    }
+                }
             }
         })
     }
