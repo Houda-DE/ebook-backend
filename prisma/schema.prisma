@@ -20,3 +20,15 @@ model user{
   lastName String
 
 }
+
+model product{
+
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  imageUrl String @unique
+  name String @unique
+  description String
+  prix Int
+  quantity Int
+
+}

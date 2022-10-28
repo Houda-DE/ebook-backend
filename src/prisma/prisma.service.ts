@@ -7,7 +7,7 @@ export class PrismaService extends PrismaClient {
         super({
             datasources :{
                 db : {
-                    url : "mysql://root:123456@localhost:3306/commercebackend?schema=public"
+                    url : "mysql://root:123456@localhost:3306/dbcommerce?schema=public"
                 }
             }
         })
