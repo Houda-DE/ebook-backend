@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { category } from '@prisma/client';
+import { CategorieDto } from 'src/categorie/dto';
 
 
 @Injectable()
@@ -11,20 +12,30 @@ export class ProductService {
 
     constructor (private prisma : PrismaService){}
 
-    async addProduct (dto : ProductDto , cat : category) { 
+    async addProduct (dto : ProductDto){ 
         try {
-            const product = await this.prisma.product.create({
+            let categories = { connect: [] };
+
+            const categorie = [1 , 3]
+    
+            if (categorie) {
+            categories = {
+                connect: categorie.map((category) => {
+                return { id: category };
+                }),
+            };
+            }
+            return await this.prisma.product.create({
                 data : {
                     name : dto.name,
                     description : dto.description,
                     quantity : dto.quantity,
                     imageUrl : dto.imageUrl,
                     prix : dto.price,
-                    categories : {
-                        connect : {
-                            id : cat.id             
-                        }
-                    }
+                    categories,
+                },
+                include : {
+                    categories : true
                 }
             })
         }
@@ -40,7 +51,11 @@ export class ProductService {
     }
 
     async findAllProducts(){
-        return await this.prisma.product.findMany()
+        return await this.prisma.product.findMany({
+            include : {
+                categories : true
+            }
+        })
     }
 
     async findOneProduct(id: number){
@@ -49,6 +64,9 @@ export class ProductService {
                 where : {
                     id  : id
                 },
+                include : {
+                    categories : true
+                }
             })
        }
        catch(error){
@@ -67,11 +85,6 @@ export class ProductService {
                 quantity : dto.quantity,
                 imageUrl : dto.imageUrl,
                 prix : dto.price,
-                categories : {
-                    connect : {
-                        id : cat.id             
-                    }
-                }
             }
         })
     }
@@ -81,6 +94,9 @@ export class ProductService {
             await this.prisma.product.delete({
                 where : {
                     id : id
+                },
+                include : {
+                    categories : true
                 }
             })
             return this.findAllProducts()
@@ -89,5 +105,21 @@ export class ProductService {
             throw error
         }
     }
+
+    private connectCategoriesById(
+        categories: number[],
+      ){
+        let categoriesConnection = { connect: [] };
+    
+        if (categories) {
+          categoriesConnection = {
+            connect: categories.map((category) => {
+              return { id: category };
+            }),
+          };
+        }
+    
+        return categoriesConnection;
+      }
 
 }

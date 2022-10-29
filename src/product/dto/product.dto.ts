@@ -1,4 +1,4 @@
-import { IsNotEmpty, isNumber, IsNumber, IsPositive, IsString } from "class-validator"
+import { IsArray, IsNotEmpty, isNumber, IsNumber, IsPositive, IsString } from "class-validator"
 
 export class ProductDto {
 
@@ -23,6 +23,11 @@ export class ProductDto {
     @IsPositive()
     @IsNumber()
     quantity : number
+
+
+    @IsArray()
+    @IsNotEmpty()
+    categories : number[]
 
 
 }

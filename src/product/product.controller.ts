@@ -10,9 +10,9 @@ export class ProductController {
     constructor (private productService : ProductService) {}
 
     @Post('add')
-    addProduct (@Body() dto : ProductDto , cat : category) {
+    addProduct (@Body() dto : ProductDto) {
         console.log(dto)
-        return this.productService.addProduct(dto , cat)
+        return this.productService.addProduct(dto)
     }
 
     @Get('products')
