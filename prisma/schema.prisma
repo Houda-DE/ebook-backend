@@ -11,15 +11,19 @@ datasource db {
 }
 
 model user {
+
   id Int @id @default(autoincrement())
   firstName String
   lastName String
   email String @unique
   createdAt DateTime @default(now())
   hash String
+  orders order[]
+
 }
 
 model product{
+
   id Int @id @default(autoincrement())
   name String @unique
   description String
@@ -28,11 +32,26 @@ model product{
   imageUrl String @unique
   createdAt DateTime @default(now())
   categories category[] 
+  orders order[]
+
 }
 
 model category{
+
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   name String @unique
   products product[] 
+
+}
+
+model order {
+
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  products product[]
+  user user @relation(fields: [userId], references: [id])
+  userId Int
+  amount Int
+
 }
