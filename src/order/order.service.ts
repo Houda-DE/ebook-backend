@@ -41,6 +41,42 @@ export class OrderService {
         })
     }
 
+    async updateOrder(id : number){
+        let products = { connect: [] };
+
+            const product = [1 , 8]
     
+            if (product) {
+            products = {
+                connect: product.map((category) => {
+                return { id: category };
+                }),
+            };
+        }
+
+        await this.prisma.order.update({
+            where : {
+                id : id
+            },
+            data : {
+                products
+            }
+        })
+
+        return this.getAllOrders()
+    }
+
+   async deleteOrder(id : number){
+        await this.prisma.order.delete({
+            where : {
+                id : id
+            },
+            include : {
+                user : true,
+                products : true
+            }
+        })
+        return this.getAllOrders()
+   }
 
 }

@@ -1,10 +1,9 @@
-import { Controller , Req , Body , Post ,Get , UseGuards} from '@nestjs/common';
-import { Request } from 'express';
-import { userInfo } from 'os';
+import { Controller , Req , Body , Post ,Get , UseGuards , Delete, Param, Patch} from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { OrderDto } from './dto/order.dto';
 import { OrderService } from './order.service';
+import { ParseIntPipe } from '@nestjs/common/pipes';
 
 @Controller('order')
 export class OrderController {
@@ -29,7 +28,7 @@ export class OrderController {
 
     @Get('myOrders')
     @UseGuards(JwtGuard)
-    async getUserOrder(
+    async getUserOrders(
         @Req() req : any ,
     ){
         const userId = req.user.id
@@ -39,6 +38,16 @@ export class OrderController {
                 userId : userId
             }
         })
+    }
+
+    @Patch('/:id')
+    updateAnOrder(@Param('id' , ParseIntPipe) id : number){
+        return this.orderServices.updateOrder(id)
+    }
+
+    @Delete('/:id')
+    deleteOrder(@Param('id' , ParseIntPipe) id : number){
+        return this.orderServices.deleteOrder(id)
     }
 
 }
