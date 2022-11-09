@@ -8,24 +8,33 @@ import { CategorieDto } from 'src/categorie/dto';
 
 
 @Injectable()
-export class ProductService {
+export class BookService {
 
     constructor (private prisma : PrismaService){}
 
-    async addProduct (dto : ProductDto){ 
+    async addBook (dto : ProductDto , categorie : number[] , author : number[]){ 
         try {
             let categories = { connect: [] };
-
-            const categorie = [1 , 3]
     
             if (categorie) {
-            categories = {
-                connect: categorie.map((category) => {
-                return { id: category };
-                }),
-            };
+                categories = {
+                    connect: categorie.map((category) => {
+                    return { id: category };
+                    }),
+                };
             }
-            return await this.prisma.product.create({
+
+            let authors = { connect: [] };
+    
+            if (author) {
+                authors = {
+                    connect: categorie.map((idAuth) => {
+                    return { id: idAuth };
+                    }),
+                };
+            }
+
+            return await this.prisma.book.create({
                 data : {
                     name : dto.name,
                     description : dto.description,
@@ -33,6 +42,7 @@ export class ProductService {
                     imageUrl : dto.imageUrl,
                     prix : dto.price,
                     categories,
+                    author
                 },
                 include : {
                     categories : true
@@ -50,22 +60,24 @@ export class ProductService {
         }
     }
 
-    async findAllProducts(){
-        return await this.prisma.product.findMany({
+    async findAllBooks(){
+        return await this.prisma.book.findMany({
             include : {
-                categories : true
+                categories : true,
+                author : true
             }
         })
     }
 
-    async findOneProduct(id: number){
+    async findOneBook(id: number){
        try {
-            return await this.prisma.product.findUniqueOrThrow({
+            return await this.prisma.book.findUniqueOrThrow({
                 where : {
                     id  : id
                 },
                 include : {
-                    categories : true
+                    categories : true,
+                    author : true
                 }
             })
        }
@@ -74,8 +86,8 @@ export class ProductService {
        }
     }
 
-    async modifyProduct(id : number , dto : ProductDto , cat : category){
-        return await this.prisma.product.update({
+    async modifyBook(id : number , dto : ProductDto){
+        return await this.prisma.book.update({
             where :  {
                 id : id
             },
@@ -89,14 +101,15 @@ export class ProductService {
         })
     }
 
-    async deleteProduct(id : number){
+    async deleteBook(id : number){
         try{
-            await this.prisma.product.delete({
+            await this.prisma.book.delete({
                 where : {
                     id : id
                 },
                 include : {
-                    categories : true
+                    categories : true,
+                    author : true
                 }
             })
             return this.findAllProducts()
@@ -105,21 +118,5 @@ export class ProductService {
             throw error
         }
     }
-
-    private connectCategoriesById(
-        categories: number[],
-      ){
-        let categoriesConnection = { connect: [] };
-    
-        if (categories) {
-          categoriesConnection = {
-            connect: categories.map((category) => {
-              return { id: category };
-            }),
-          };
-        }
-    
-        return categoriesConnection;
-      }
 
 }
