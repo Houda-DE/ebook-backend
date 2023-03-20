@@ -8,11 +8,11 @@ import { CategorieDto } from 'src/categorie/dto';
 
 
 @Injectable()
-export class BookService {
+export class ProductService {
 
     constructor (private prisma : PrismaService){}
 
-    async addBook (dto : ProductDto , categorie : number[] , author : number[]){ 
+    async addProduct (dto : ProductDto , categorie : number[] , author : number[]){ 
         try {
             let categories = { connect: [] };
     
@@ -42,7 +42,6 @@ export class BookService {
                     imageUrl : dto.imageUrl,
                     prix : dto.price,
                     categories,
-                    author
                 },
                 include : {
                     categories : true
@@ -60,16 +59,15 @@ export class BookService {
         }
     }
 
-    async findAllBooks(){
+    async findAllProducts(){
         return await this.prisma.book.findMany({
             include : {
                 categories : true,
-                author : true
             }
         })
     }
 
-    async findOneBook(id: number){
+    async findOneProduct(id: number){
        try {
             return await this.prisma.book.findUniqueOrThrow({
                 where : {
@@ -77,7 +75,6 @@ export class BookService {
                 },
                 include : {
                     categories : true,
-                    author : true
                 }
             })
        }
@@ -86,7 +83,7 @@ export class BookService {
        }
     }
 
-    async modifyBook(id : number , dto : ProductDto){
+    async modifyProduct(id : number , dto : ProductDto){
         return await this.prisma.book.update({
             where :  {
                 id : id
@@ -101,7 +98,7 @@ export class BookService {
         })
     }
 
-    async deleteBook(id : number){
+    async deleteProduct(id : number){
         try{
             await this.prisma.book.delete({
                 where : {
@@ -109,7 +106,6 @@ export class BookService {
                 },
                 include : {
                     categories : true,
-                    author : true
                 }
             })
             return this.findAllProducts()

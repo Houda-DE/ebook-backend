@@ -20,12 +20,7 @@ export class OrderService {
                 }),
             };
             }
-            return await this.prisma.order.create({
-                data : {
-                    userId,
-                    products
-                }
-            })
+    
         }
         catch(error){
             throw error
@@ -35,7 +30,6 @@ export class OrderService {
     async getAllOrders(){
         return this.prisma.order.findMany({
             include : {
-                products : true,
                 user : true
             }
         })
@@ -59,7 +53,7 @@ export class OrderService {
                 id : id
             },
             data : {
-                products
+            
             }
         })
 
@@ -73,7 +67,7 @@ export class OrderService {
             },
             include : {
                 user : true,
-                products : true
+    
             }
         })
         return this.getAllOrders()
